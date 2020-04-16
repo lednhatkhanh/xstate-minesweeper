@@ -42,6 +42,12 @@ export const minesweeperGameMachine = createMachine<Context, Event, State>(
       standingBy: {
         type: "atomic",
         entry: "resetGame",
+        on: {
+          START: {
+            target: "playing",
+            actions: ["setGameBoard", "setTotalMines"],
+          },
+        },
       },
       playing: {
         type: "atomic",
@@ -65,20 +71,20 @@ export const minesweeperGameMachine = createMachine<Context, Event, State>(
           REVEAL_CELL: {
             actions: ["revealCell", "checkBomb"],
           },
+          RESET: {
+            target: "standingBy",
+            actions: "",
+          },
         },
       },
       ended: {
         type: "atomic",
-      },
-    },
-    on: {
-      START: {
-        target: "playing",
-        actions: ["setGameBoard", "setTotalMines"],
-      },
-      RESET: {
-        target: "standingBy",
-        actions: "",
+        on: {
+          RESET: {
+            target: "standingBy",
+            actions: "",
+          },
+        },
       },
     },
   },
